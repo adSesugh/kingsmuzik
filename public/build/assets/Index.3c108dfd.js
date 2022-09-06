@@ -1,0 +1,1 @@
+import{A as r}from"./Authenticated.78e3eade.js";import{c as s,j as t}from"./app.8bed910f.js";import"./ApplicationLogo.a8871269.js";const n=()=>{const{props:e}=s();return t(r,{auth:e.auth,children:t("div",{children:"Settings"})})};export{n as default};
