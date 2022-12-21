@@ -10,8 +10,8 @@ class Purchase extends Model
     use HasFactory;
 
     protected $fillable = [
-        'post_id', 
-        'user_id', 
+        'post_id',
+        'user_id',
         'amount'
     ];
 
@@ -20,7 +20,7 @@ class Purchase extends Model
         parent::boot();
 
         self::creating(function ($model) {
-            $model->user_id = auth()->id();
+            $model->user_id = 1;
         });
     }
 

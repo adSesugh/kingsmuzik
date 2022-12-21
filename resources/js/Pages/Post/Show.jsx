@@ -10,15 +10,13 @@ const Show = () => {
     const { props } = usePage();
     const [total, setTotal] = useState(0);
 
-    console.log(props.post);
-
     useEffect(() => {
         // if(props?.post.purchases){
         //     let sum = 0;
         //     props?.post.purchases.forEach(el => {
         //         sum += Number(el.amount);
         //     })
-            
+
         //     setTotal(sum);
         // }
     }, [total])
@@ -132,7 +130,7 @@ const Show = () => {
                                                     <span className='text-sm leading-4 px-2 italic'>{feed.message}</span>
                                                 </div>
                                                 <div className='flex flex-row justify-between'>
-                                                    <span className='text-[10px] uppercase'>By - {feed.user.username}</span>
+                                                    <span className='text-[10px] uppercase'>By - {feed.name}</span>
                                                     <span className='text-[10px] text-slate-700 px-2'>{moment(feed.createdAt).format('LL')}</span>
                                                 </div>
                                             </div>

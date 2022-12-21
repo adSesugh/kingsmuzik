@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/inertia-react';
 
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-    
+
     return (
         <div className="flex flex-col h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100 h-[10%]">
@@ -109,7 +109,7 @@ export default function Authenticated({ auth, header, children }) {
                     </div>
                 </div>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden bg-white'}>
+                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' '}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard

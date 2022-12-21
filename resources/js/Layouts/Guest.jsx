@@ -2,6 +2,7 @@ import React from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { Link, usePage } from '@inertiajs/inertia-react';
 import { FaHome } from 'react-icons/fa';
+import Footer from '@/Components/Footer';
 
 export default function Guest({ children }) {
     const { props } = usePage()
@@ -30,7 +31,7 @@ export default function Guest({ children }) {
                     </div>
                 </div>
             </div>
-            <div className='h-12 border-b bg-gradient-to-tr from-pink-600 to-violet-600 w-full'>
+            <div className='h-12 bg-gradient-to-tr from-pink-600 to-violet-600 w-full'>
                 <div className='flex flex-row justify-between items-center h-full overflow-x-scroll'>
                     <div className='flex items-center justify-center w-[5%] font-serif text-white'>
                         <Link href='/'>
@@ -58,6 +59,9 @@ export default function Guest({ children }) {
             </div>
             <div className="w-full">
                 {children}
+                <div className='bg-gray-600 divide-y-2 py-2 mt-2'>
+                    <Footer />
+                </div>
             </div>
         </div>
     );

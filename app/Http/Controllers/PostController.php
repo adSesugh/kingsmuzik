@@ -45,7 +45,7 @@ class PostController extends Controller
 
         $cover = $request->file('coverImg');
         $coverImgPhoto = time().'.'.$cover->getClientOriginalExtension();
-        
+
         $destinationPath = storage_path('/app/public/images');
         $imgFile = Image::make($cover->getRealPath());
         $imgFile->save($destinationPath.'/'.$coverImgPhoto);
@@ -75,20 +75,20 @@ class PostController extends Controller
                 'status'    => $request->status,
                 'content'   => $request->content
             ]);
-    
+
             if(!is_null($audioPath)){
                 $post->addMedia(storage_path('app/public/'.$audioPath))->toMediaCollection();
                 $postMedia = $post->media;
                 Log::info($postMedia);
             }
-    
+
             if(!is_null($videoPath)){
                 $post->addMedia(storage_path('app/public/'.$videoPath))->toMediaCollection();
                 $postMedia = $post->media;
                 Log::info($postMedia);
             }
-        }); 
-        
+        });
+
         return redirect()->route('posts.index');
     }
 

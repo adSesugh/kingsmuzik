@@ -17,11 +17,11 @@ const Create = () => {
     const [value, onChange] = useState(initialValue);
     const [catValue, setCatValue] = useState();
     const { data, setData, post, processing, progress, errors, reset } = useForm({
-        title: null,
-        category_id: null,
+        title: undefined,
+        category_id: undefined,
         status: 0,
-        coverImg: null,
-        content: null
+        coverImg: undefined,
+        content: undefined
     })
 
     const handleImageUpload = (file) => new Promise((resolve, reject) => {
@@ -56,7 +56,7 @@ const Create = () => {
             <ValidationErrors errors={errors} />
             <div className='p-1 h-full sm:overflow-y-hidden md:overflow-y-hidden'>
                 <form onSubmit={onSubmit} className='flex flex-col sm:flex-row justify-between p-1 h-full overflow-y-scroll sm:overflow-y-hidden md:overflow-y-hidden'>
-                    <div className='sm:w-2/5 bg-gray-50 shadow-2xl overflow-hidden'>
+                    <div className='w-full sm:w-2/5 bg-gray-50 shadow-2xl'>
                         <div className='flex flex-col h-full w-full items-center my-3 overflow-y-scroll'>
                             <div className='w-4/5 pb-2'>
                                 <Label value={'Title'} />
@@ -84,9 +84,9 @@ const Create = () => {
                                 <div className='border-2 border-gray-100 p-2'>
                                     <div className='flex flex-row space-x-4'>
                                         <div className='relative inline-block justify-center'>
-                                            <input 
-                                                name='status' 
-                                                type='radio' 
+                                            <input
+                                                name='status'
+                                                type='radio'
                                                 onChange={(e) => {
                                                     setData({...data, ['status']: 0})
                                                 }}
@@ -94,9 +94,9 @@ const Create = () => {
                                             /> <span className='text-xs'>DRAFT</span>
                                         </div>
                                         <div className='relative inline-block justify-center'>
-                                            <input 
-                                                name='status' 
-                                                type='radio' 
+                                            <input
+                                                name='status'
+                                                type='radio'
                                                 onChange={(e) => {
                                                     setData({...data, ['status']: 1})
                                                 }}
@@ -128,7 +128,7 @@ const Create = () => {
                             {fileType && fileType === 'Music' ? (
                                 <div className='w-4/5 py-1'>
                                     <Label value={'Audio File'} />
-                                    <div className='flex items-center justify-center h-24 border-2 border-dashed'> 
+                                    <div className='flex items-center justify-center h-24 border-2 border-dashed'>
                                         <input
                                             name='audio'
                                             type="file"
@@ -200,7 +200,7 @@ const Create = () => {
                             )}
                         </div>
                     </div>
-                    <div className='sm:w-3/5 bg-gray-50 shadow-2xl'>
+                    <div className='w-full sm:w-3/5 bg-gray-50 shadow-2xl'>
                         <div className='flex flex-col w-full my-3'>
                             <div className='flex w-full justify-center items-center'>
                                 <div className='w-11/12 h-72 pb-2'>
@@ -221,7 +221,7 @@ const Create = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='sm:w-2/5 pl-1'>
+                    <div className='w-full sm:w-2/5 pl-1'>
                         <div className='bg-white shadow-2xl py-2 border-b-2 px-2'>Recent 10 Posts</div>
                         <div className='w-full pb-10 h-full overflow-y-scroll'>
                             {props.posts.map((post, index) => (
