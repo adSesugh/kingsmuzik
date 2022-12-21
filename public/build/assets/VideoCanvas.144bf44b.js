@@ -1,0 +1,1 @@
+import{j as e}from"./app.42d8ad0f.js";import{d as l}from"./styles.cf9efcd8.js";const u=({video:o,image:s,playing:a})=>e("div",{className:"h-5/6 w-full",children:e(l.exports.DefaultPlayer,{loop:!1,muted:!1,autoPlay:a,poster:s,controls:["PlayPause","Seek","Time","Volume","Fullscreen"],onCanPlayThrough:()=>{},children:e("source",{src:o,type:"video/mp4"})})});export{u as V};

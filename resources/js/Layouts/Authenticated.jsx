@@ -4,9 +4,25 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/inertia-react';
+import { createPopper } from "@popperjs/core";
 
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [dropdownPopoverShow, setDropdownPopoverShow] = useState(false);
+    const btnDropdownRef = React.createRef();
+    const popoverDropdownRef = React.createRef();
+    const color = "white"
+
+    const openDropdownPopover = () => {
+        createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
+            placement: "bottom-start"
+        });
+        setDropdownPopoverShow(true);
+    };
+
+    const closeDropdownPopover = () => {
+        setDropdownPopoverShow(false);
+    };
 
     return (
         <div className="flex flex-col h-screen bg-gray-100">
@@ -85,19 +101,26 @@ export default function Authenticated({ auth, header, children }) {
 
                         <div className="-mr-2 flex items-center sm:hidden">
                             <button
-                                onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
+                                type='button'
+                                ref={btnDropdownRef}
+                                onClick={() => {
+                                    dropdownPopoverShow
+                                      ? closeDropdownPopover()
+                                      : openDropdownPopover();
+                                }}
+                                //onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                             >
                                 <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path
-                                        className={!showingNavigationDropdown ? 'inline-flex' : 'hidden'}
+                                        className={!dropdownPopoverShow ? 'inline-flex' : 'hidden'}
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth="2"
                                         d="M4 6h16M4 12h16M4 18h16"
                                     />
                                     <path
-                                        className={showingNavigationDropdown ? 'inline-flex' : 'hidden'}
+                                        className={dropdownPopoverShow ? 'inline-flex' : 'hidden'}
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth="2"
@@ -109,7 +132,7 @@ export default function Authenticated({ auth, header, children }) {
                     </div>
                 </div>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' '}>
+                <div ref={popoverDropdownRef} className={(dropdownPopoverShow ? 'block bg-white' : 'hidden') + ' sm:hidden text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard

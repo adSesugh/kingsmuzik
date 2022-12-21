@@ -25,6 +25,7 @@
         "@mantine/core": "^4.2.12",
         "@mantine/hooks": "^4.2.12",
         "@mantine/rte": "^4.2.12",
+        "@popperjs/core": "2.9.1",
         "aos": "^2.3.4",
         "daisyui": "^2.18.0",
         "html-to-react": "^1.5.0",
