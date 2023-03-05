@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Spatie\MediaLibrary\Conversions\ConversionCollection;
 use Spatie\MediaLibrary\Conversions\FileManipulator;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAdded;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\DiskCannotBeAccessed;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Support\File;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGeneratorFactory;
@@ -23,22 +24,34 @@ class Filesystem
     ) {
     }
 
-    public function add(string $file, Media $media, ?string $targetFileName = null): void
+    public function add(string $file, Media $media, ?string $targetFileName = null): bool
     {
-        $this->copyToMediaLibrary($file, $media, null, $targetFileName);
+        try {
+            $this->copyToMediaLibrary($file, $media, null, $targetFileName);
+        } catch(DiskCannotBeAccessed $exception) {
+            return false;
+        }
 
         event(new MediaHasBeenAdded($media));
 
         app(FileManipulator::class)->createDerivedFiles($media);
+
+        return true;
     }
 
-    public function addRemote(RemoteFile $file, Media $media, ?string $targetFileName = null): void
+    public function addRemote(RemoteFile $file, Media $media, ?string $targetFileName = null): bool
     {
-        $this->copyToMediaLibraryFromRemote($file, $media, null, $targetFileName);
+        try {
+            $this->copyToMediaLibraryFromRemote($file, $media, null, $targetFileName);
+        } catch(DiskCannotBeAccessed $exception) {
+            return false;
+        }
 
         event(new MediaHasBeenAdded($media));
 
         app(FileManipulator::class)->createDerivedFiles($media);
+
+        return true;
     }
 
     public function copyToMediaLibraryFromRemote(RemoteFile $file, Media $media, ?string $type = null, ?string $targetFileName = null): void
@@ -129,16 +142,20 @@ class Filesystem
             : $media->getDiskDriverName();
 
         if ($diskDriverName === 'local') {
-            $this->filesystem
+            $success = $this->filesystem
                 ->disk($diskName)
                 ->put($destination, $file);
 
             fclose($file);
 
+            if (! $success) {
+                throw DiskCannotBeAccessed::create($diskName);
+            }
+
             return;
         }
 
-        $this->filesystem
+        $success = $this->filesystem
             ->disk($diskName)
             ->put(
                 $destination,
@@ -148,6 +165,10 @@ class Filesystem
 
         if (is_resource($file)) {
             fclose($file);
+        }
+
+        if (! $success) {
+            throw DiskCannotBeAccessed::create($diskName);
         }
     }
 
@@ -200,6 +221,7 @@ class Filesystem
         $responsiveImagesDirectory = $this->getMediaDirectory($media, 'responsiveImages');
 
         collect([$mediaDirectory, $conversionsDirectory, $responsiveImagesDirectory])
+            ->unique()
             ->each(function (string $directory) use ($media) {
                 try {
                     $this->filesystem->disk($media->conversions_disk)->deleteDirectory($directory);
@@ -241,7 +263,7 @@ class Filesystem
 
         $oldMedia = (clone $media)->fill($media->getOriginal());
 
-        if ($oldMedia->getPath() === $media->getPath()) {
+        if ($factory->getPath($oldMedia) === $factory->getPath($media)) {
             return;
         }
 
@@ -313,7 +335,7 @@ class Filesystem
             ? $media->conversions_disk
             : $media->disk;
 
-        if (! in_array($diskDriverName, ['s3'], true)) {
+        if (! in_array($diskDriverName, ['s3', 'gcs'], true)) {
             $this->filesystem->disk($diskName)->makeDirectory($directory);
         }
 

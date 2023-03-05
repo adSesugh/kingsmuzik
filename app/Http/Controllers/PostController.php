@@ -46,7 +46,7 @@ class PostController extends Controller
         $cover = $request->file('coverImg');
         $coverImgPhoto = time().'.'.$cover->getClientOriginalExtension();
 
-        $destinationPath = storage_path('/app/public/images');
+        $destinationPath = public_path('/images');
         $imgFile = Image::make($cover->getRealPath());
         $imgFile->save($destinationPath.'/'.$coverImgPhoto);
 
@@ -55,13 +55,14 @@ class PostController extends Controller
         if($request->has('audioUrl') && $request->file('audioUrl')){
             $audio = $request->file('audioUrl');
             $audioName = $audio->getClientOriginalName();
-            $audioPath = $request->file('audioUrl')->storeAs('media', $audioName, 'public');
+            $audioPath = $request->file('audioUrl')->storeAs('media', $audioName, 'kingsmuzik_media');
+            Log::info($audioPath);
         }
 
         if($request->has('videoUrl') && $request->file('videoUrl')){
             $video = $request->file('videoUrl');
             $videoName = $video->getClientOriginalName();
-            $videoPath = $request->file('videoUrl')->storeAs('media', $videoName, 'public');
+            $videoPath = $request->file('videoUrl')->storeAs('media', $videoName, 'kingsmuzik_media');
         }
 
         DB::transaction(function() use ($request, $coverImgPhoto, $audioPath, $videoPath){
@@ -69,21 +70,21 @@ class PostController extends Controller
             $post = Post::create([
                 'title' =>  $request->title,
                 'category_id'   => $request->category_id,
-                'coverImg'  => 'http://localhost:3000/storage/app/public/images/'.$coverImgPhoto,
-                'audioUrl'  => is_null($audioPath) ? NULL : '/storage/app/public/'.$audioPath,
-                'videoUrl'  =>  is_null($videoPath) ? NULL : '/storage/app/public/'.$videoPath,
+                'coverImg'  =>  env('APP_URL'). '/images/'.$coverImgPhoto,
+                'audioUrl'  => is_null($audioPath) ? NULL : env('APP_URL').$audioPath,
+                'videoUrl'  =>  is_null($videoPath) ? NULL : env('APP_URL').$videoPath,
                 'status'    => $request->status,
                 'content'   => $request->content
             ]);
 
             if(!is_null($audioPath)){
-                $post->addMedia(storage_path('app/public/'.$audioPath))->toMediaCollection();
+                $post->addMedia(public_path('media/'.$audioPath))->toMediaCollection();
                 $postMedia = $post->media;
                 Log::info($postMedia);
             }
 
             if(!is_null($videoPath)){
-                $post->addMedia(storage_path('app/public/'.$videoPath))->toMediaCollection();
+                $post->addMedia(public_path('media/'.$videoPath))->toMediaCollection();
                 $postMedia = $post->media;
                 Log::info($postMedia);
             }

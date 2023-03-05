@@ -33,6 +33,7 @@ use Spatie\MediaLibrary\Support\UrlGenerator\UrlGeneratorFactory;
 use Spatie\MediaLibraryPro\Models\TemporaryUpload;
 
 /**
+ * @property-read string $uuid
  * @property-read string $type
  * @property-read string $extension
  * @property-read string $humanReadableSize
@@ -96,6 +97,10 @@ class Media extends Model implements Responsable, Htmlable, Attachable
         return $urlGenerator->getPath();
     }
 
+    public function getPathRelativeToRoot(string $conversionName = ''): string
+    {
+        return $this->getUrlGenerator($conversionName)->getPathRelativeToRoot();
+    }
 
     public function getUrlGenerator(string $conversionName): UrlGenerator
     {
@@ -434,12 +439,10 @@ class Media extends Model implements Responsable, Htmlable, Attachable
 
     public function mailAttachment(string $conversion = ''): Attachment
     {
-        $path = $this->getUrlGenerator($conversion)->getPathRelativeToRoot();
-
-        $attachment = Attachment::fromStorageDisk($this->disk, $path)->as($this->file_name);
+        $attachment = Attachment::fromStorageDisk($this->disk, $this->getPathRelativeToRoot($conversion))->as($this->file_name);
 
         if ($this->mime_type) {
-            $attachment->withMime($this->mime);
+            $attachment->withMime($this->mime_type);
         }
 
         return $attachment;

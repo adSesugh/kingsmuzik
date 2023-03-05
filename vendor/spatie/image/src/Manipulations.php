@@ -19,6 +19,7 @@ class Manipulations
     public const CROP_BOTTOM_RIGHT = 'crop-bottom-right';
 
     public const ORIENTATION_AUTO = 'auto';
+    public const ORIENTATION_0 = 0;
     public const ORIENTATION_90 = 90;
     public const ORIENTATION_180 = 180;
     public const ORIENTATION_270 = 270;
@@ -30,6 +31,7 @@ class Manipulations
     public const FIT_CONTAIN = 'contain';
     public const FIT_MAX = 'max';
     public const FIT_FILL = 'fill';
+    public const FIT_FILL_MAX = 'fill-max';
     public const FIT_STRETCH = 'stretch';
     public const FIT_CROP = 'crop';
 

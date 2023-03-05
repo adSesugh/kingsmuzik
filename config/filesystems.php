@@ -56,6 +56,11 @@ return [
             'throw' => false,
         ],
 
+        'kingsmuzik_media' => [
+            'driver' => 'local',
+            'root' => public_path(),
+        ],
+
     ],
 
     /*
